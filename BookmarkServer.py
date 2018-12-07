@@ -59,7 +59,15 @@ class ThreadHTTPServer(ThreadingMixIn, http.server.HTTPServer):
 memory = {}
 
 form = '''<!DOCTYPE html>
+<head>
 <title>Bookmark Server</title>
+</head>
+<body>
+<h1>My Bookmark server</h1>
+<p>this URL Shortener is a cool thing I wrote following along with Udacity. 
+ put a website that you want to save in the 'LongURI' and the shortname in the 'Short Name' Box and click submit"
+</p>
+<p><b>NOTICE:</b> this service <b style="color:red;">DOES NOT</b> have permanent storage. <b>ALL LINKS WILL BE LOST</b> if the server resets or the service goes down for maintainance </p>
 <form method="POST">
     <label>Long URI:
         <input name="longuri">
@@ -75,8 +83,8 @@ form = '''<!DOCTYPE html>
 <pre>
 {}
 </pre>
+</body>
 '''
-
 
 
 
