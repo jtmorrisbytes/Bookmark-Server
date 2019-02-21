@@ -1,5 +1,5 @@
 from .database import db, ma, ShortUrl, short_url_schema
-from flask import Flask, redirect, render_template, flash, url_for
+from flask import Flask, redirect, render_template, flash, url_for, request
 from urllib.parse import quote, urlparse
 from . import config
 from webargs.flaskparser import use_args
@@ -43,7 +43,7 @@ def make_request(request_uri, timeout=connection_timeout):
                     'was not found', category='info')
             return response
     else:
-        flash("The url " + request_uri + 'is not valid',
+        flash('The url "' + request_uri + '" is not valid',
         category='danger')
         return None
 def get_data(request_uri, timeout=connection_timeout):
@@ -82,34 +82,23 @@ show_bookmarks_defaults= {
     'shortName':None,
     'longUri':None,
 }
-@bookmark_server.route('/<string:shortName>', methods=['GET'])
+@bookmark_server.route('/bookmark/<string:shortName>', methods=['GET'])
 
 def do_redirect(shortName):
-        if len(shortName) > 0:
-            shortUrl = ShortUrl.query.filter_by(shortname=shortName)
-            if shortUrl is not None:
-                if hasattr(shortUrl, 'url'):
-                    return redirect(shortUrl.url)
-                else:
-                    return sendError(errCode=501,
-                                        short_error_message='Url not found for shortname "' + shortName + '"',
-                                        long_error_message =  'I could not find the related URL for ' + shortName + 'in the database,'
-                                        )
-            else:
-                    return sendError(
-                    'error.html',
-                    errorCode=404,
-                    short_error_message='shortname not found',
-                    long_error_message=
-                    'I did not find the shortname "' + shortName +
-                    '" in the database'
-            )
+    print("fetching link shortname: "+ shortName)
+    if len(shortName) > 0:
+        shortUrl = ShortUrl.query.filter_by(shortname=shortName).first()
+        print("shorturl databse find: " + str(shortUrl))
+        if shortUrl is not None:
+            return redirect(shortUrl.longuri, 302)
         else:
-            return redirect('/',300)
+                flash('I did not find the short name "' + shortName + '" in the database',
+                category='info')
+    return redirect('/',302)
 
         
 @bookmark_server.route('/', methods=['GET'])
-@use_args({'longuri':fields.String(required=False),
+@use_args({'longuri':fields.String(required=False, default="https://www.google.com/"),
            'shortname': fields.String(required=False)})
 def show_bookmarks(args):
     shorturls = ShortUrl.query.all()
@@ -127,6 +116,11 @@ def add_bookmark(args):
     icons = None
     print(args)
     if hasattr(args, 'longuri') and hasattr(args, 'shortname'):
+        shorturl_match_list = ShortUrl.query.filter_by(shortname=args.shortname).all()
+        if len(shorturl_match_list)> 0:
+            flash("The shortname  '"  + args.shortname +"' already exists", category='danger')
+            return redirect(url_for('show_bookmarks'), 302)
+            
         response = make_request(args.longuri)
         if response is not None:
             icon = favicon.get(args.longuri)[0]
@@ -138,8 +132,13 @@ def add_bookmark(args):
             #                          longuri=args.longuri,
             #                          iconurl=iconurl)
             args.iconurl = iconurl
+            args.shortname = args.shortname.lower()
+
             db.session.add(args)
             db.session.commit()
+            available_url = urlparse(request.url)
+            available_url = available_url.scheme +"://" + available_url.netloc + '/bookmark/' + args.shortname
+            flash("added your bookmark! its available at " + available_url, category='success')
             
            
     else:

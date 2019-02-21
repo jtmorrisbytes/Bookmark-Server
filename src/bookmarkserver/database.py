@@ -9,7 +9,7 @@ class ShortUrl(db.Model):
     __tablename__ = 'shorturls'
     id = db.Column(db.Integer, primary_key=True)
     shortname = db.Column(db.String(255), nullable=False)
-    longuri = db.Column(db.String(maxUrlLength))
+    longuri = db.Column(db.String(maxUrlLength), nullable=False)
     iconurl = db.Column(db.String)
     icondata = db.Column(db.String)
 
