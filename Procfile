@@ -1,1 +1,1 @@
-web: python BookmarkServer.py
+web: gunicorn src/main:bookmark_server

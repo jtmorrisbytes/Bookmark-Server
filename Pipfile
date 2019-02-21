@@ -19,6 +19,7 @@ marshmallow = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 favicon = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
