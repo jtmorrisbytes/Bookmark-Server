@@ -1,1 +1,1 @@
-web: gunicorn src/main:bookmark_server
+web: python src/main.py

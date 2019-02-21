@@ -20,6 +20,7 @@ flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 favicon = "*"
 gunicorn = "*"
+waitress = "*"
 
 [requires]
 python_version = "3.7"
