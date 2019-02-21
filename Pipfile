@@ -21,6 +21,7 @@ marshmallow-sqlalchemy = "*"
 favicon = "*"
 gunicorn = "*"
 waitress = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.7"
