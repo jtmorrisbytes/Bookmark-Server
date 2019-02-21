@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<meta http-equiv="refresh" content="{{redirect_delay}}; URL='{{redirect_url}}'" />
+{% endblock %}
+{% block title %}
+<title>Error {{errorCode}}: {{short_error_message}}</title>
+{% endblock %}
+
+
+{% block content %}
+<h1>Error {{errorCode}}: {{short_error_message}}</h1>
+<h2>{{long_error_message}}</h2>
+<p>
+    If you feel that this message is inaccurate, should not be showing, or to otherwise
+    report this error, please contact Jordan, the app deveoper at:&nbsp;
+    <a href="mailto:jthecybertinkerer@gmail.com?subject={{short_error_message_urlsafe}}">
+        jthecybertinkerer@gmail.com</a>
+    and leave me a short message detailing the steps you took to reproduce the error,
+    as well as the data you tried to enter into the app
+</p>
+<br />
+<p> redirecting to url "{{redirect_url}}" in {{redirect_timeout}} seconds or
+ click <a href="{{redirect_url}}">here</a> to go back now
+</p>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}
+    Bookmark Server
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="text-center">My Bookmark server</h1>
+        <p class="lead">This URL Shortener is a cool thing I wrote following along with Udacity. 
+        put a website that you want to save in the 'LongURI' and the shortname in the 'Short Name' Box and click submit"
+        </p>
+        <p><b>NOTICE:</b> this service <b style="color:red;">DOES NOT</b> have permanent storage. <b>ALL LINKS WILL BE LOST</b> if the server resets or the service goes down for maintainance </p>
+        <form method="POST">
+            <div class="form-group">
+                <label for="long-uri"> Long Web Link</label>
+                <input id='long-uri' placeholder='ex: http://www.google.com/' type="text" name="longuri" value="{{longUri}}">
+                <small id='long-link-help' class="form-text text-muted">Paste the link you want to remember in the box above</small>   
+            </div>
+            <div class="form-group">
+                <label>Short name:</label>
+                <input type='text' placeholder="google" name="shortname" value="{{shortName}}">
+                <small id="short-link-help" class="form-text text-muted">
+                    Enter the name that you want to shorten the link to.
+                </small>
+            </div>
+            
+                
+            
+            <br>
+            <button type="submit">Save it!</button>
+        </form>
+    </div>
+    <div class="container-fluid">
+        <p>URIs I know about:</p>
+        {% if shorturls %}
+            {% for column in shorturls | batch(numurlcolumns)%}
+            <div class="row">
+                {% for shorturl in column %}
+                 <!-- style="width:calc(75px + 2vw); height:auto;" -->
+                    <div class="col-md" >
+                        <div class="card text-center" style="max-width:25vw; margin-left:25%; margin-right:auto">
+                            <a href="{{shorturl.longuri}}">
+                                <img class='card-img-top'
+                                src='{{shorturl.iconurl}}'
+                                alt='{{shortname}} icon'
+                                >
+                            </a><br>
+                            <a href="{{shorturl.longuri}}">{{shorturl.shortname}}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        {% endif %}
+                
+    </div>
+{% endblock %}
